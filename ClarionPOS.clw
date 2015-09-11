@@ -14,6 +14,8 @@ OMIT('***')
 ParseCommand            PROCEDURE(STRING eiCommand)
 GetSetupString          FUNCTION(STRING fileName), STRING
 SaveSetupString         FUNCTION(STRING fileName, string newSetupString)
+ParseTransactionResponse        PROCEDURE
+
                     
 
 
@@ -40,6 +42,17 @@ AmountTotalBuffer   CSTRING(150)
 
 TransactionTypeBuffer       CSTRING(150)
 AmountProcessedBuffer       CSTRING(150)
+AmountBalanceBuffer CSTRING(150)
+CvvResponseTextBuffer       CSTRING(150)
+CvvResponseCodeBuffer       CSTRING(150)
+AvsResponseTextBuffer       CSTRING(150)
+AvsResponseCodeBuffer       CSTRING(150)
+
+AccountCardTypeBuffer       CSTRING(150)
+AccountExpiryDateBuffer     CSTRING(150)
+AccountEntryMethodBuffer    CSTRING(150)
+MaskedAccountBuffer CSTRING(150)
+UniqueTransIdBuffer CSTRING(150)
 
 
 
@@ -60,16 +73,8 @@ Record     RECORD
 Line        STRING(LineSize)
 
             END
+
             END
-
-
-
-    
-
-
-
-
-!FILELABEL           DOS,ASCII,NAME('TEST.ASC')
 
 
 
@@ -127,20 +132,20 @@ MyWindow            WINDOW('Clarion POS'),AT(,,609,330),CENTER,GRAY,AUTO,SYSTEM,
                                 TEXT,AT(428,144,93,12),USE(?BILLINGSTREETADDRESS)
                             END
                             TAB('Result Fields'),USE(?TAB2)
-                                TEXT,AT(132,250,93,12),USE(?SMID:2)
-                                STRING('SMID'),AT(44,250,83,14),USE(?STRING1:16),FONT('Microsoft' & |
-                                    ' Sans Serif',12),COLOR(COLOR:White)
-                                STRING('ACHFormat'),AT(44,232,83,14),USE(?STRING1:17), |
+                                TEXT,AT(132,250,93,12),USE(AmountBalanceBuffer,, ?AmountBalance)
+                                STRING('AmountBalance'),AT(44,250,83,14),USE(?STRING1:16), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(132,232,93,12),USE(?ACHFORMAT:2)
-                                TEXT,AT(132,214,93,12),USE(?CASHBACK:2)
-                                STRING('CashBack'),AT(44,214,83,14),USE(?STRING1:18), |
+                                STRING('CvvResponseText'),AT(44,232,83,14),USE(?STRING1:17), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('AmountFee'),AT(44,198,83,14),USE(?STRING1:19), |
+                                TEXT,AT(132,232,93,12),USE(CvvResponseTextBuffer,, ?CvvResponseText)
+                                TEXT,AT(132,214,93,12),USE(CvvResponseCodeBuffer,, ?CvvResponseCode)
+                                STRING('CvvResponseCode'),AT(44,214,83,14),USE(?STRING1:18), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(132,198,93,12),USE(?AMOUNTFEE:2)
-                                TEXT,AT(132,180,93,12),USE(?AMOUNTTIP:2)
-                                STRING('AmountTip'),AT(44,180,83,14),USE(?STRING1:20), |
+                                STRING('AvsResponseText'),AT(44,198,83,14),USE(?STRING1:19), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                TEXT,AT(132,198,93,12),USE(AvsResponseTextBuffer,, ?AvsResponseText)
+                                TEXT,AT(132,180,93,12),USE(AvsResponseCodeBuffer,, ?AvsResponseCode)
+                                STRING('AvsResponseCode'),AT(44,180,83,14),USE(?STRING1:20), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
                                 STRING('AmountProcessed'),AT(44,162,83,14),USE(?STRING1:21), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
@@ -151,6 +156,32 @@ MyWindow            WINDOW('Clarion POS'),AT(,,609,330),CENTER,GRAY,AUTO,SYSTEM,
                                 STRING('ResultStatus'),AT(44,128,46,14),USE(?STRING1:23), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
                                 TEXT,AT(132,128,93,12),USE(ResultStatusBuffer,, ?RESULTSTATUS)
+                                TEXT,AT(362,130,93,12),USE(AccountCardTypeBuffer,, ?AccountCardType)
+                                STRING('AccountCardType'),AT(274,130,46,14),USE(?STRING1:24), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                STRING('AccountExpiryDate'),AT(274,148,73,14),USE(?STRING1:25), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                TEXT,AT(362,148,93,12),USE(AccountExpiryDateBuffer,, |
+                                    ?AccountExpiryDate)
+                                TEXT,AT(362,164,93,12),USE(AccountEntryMethodBuffer,, |
+                                    ?AccountEntryMethod)
+                                STRING('AccountEntryMethod'),AT(274,164,83,14),USE(?STRING1:26), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                STRING('MaskedAccount'),AT(274,182,83,14),USE(?STRING1:27), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                TEXT,AT(362,182,93,12),USE(MaskedAccountBuffer,, ?MaskedAccount)
+                                TEXT,AT(362,200,93,12),USE(UniqueTransIdBuffer,, ?UniqueTransId)
+                                STRING('UniqueTransId'),AT(274,200,83,14),USE(?STRING1:28), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                STRING('CvvResponseCode'),AT(274,216,83,14),USE(?STRING1:29), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                TEXT,AT(362,216,93,12),USE(CvvResponseCodeBuffer,, ?CvvResponseCode:2)
+                                TEXT,AT(362,234,93,12),USE(CvvResponseTextBuffer,, ?CvvResponseText:2)
+                                STRING('CvvResponseText'),AT(274,234,83,14),USE(?STRING1:30), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                STRING('AmountBalance'),AT(274,252,83,14),USE(?STRING1:31), |
+                                    FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
+                                TEXT,AT(362,252,93,12),USE(AmountBalanceBuffer,, ?AmountBalance:2)
                             END
                             TAB('Setup String'),USE(?TAB3)
                                 TEXT,AT(35,115,497,175),USE(SetupStringBuffer,, ?TEXT1),SCROLL,VSCROLL, |
@@ -211,13 +242,8 @@ ParseCommand         PROCEDURE(STRING eiCommand)
                 
                 ?OLE1{'TransFields.AmountTotal'} = AmountTotalBuffer
                 x# = ?OLE1{'CreditSale()'}
-                ResultStatusBuffer = ?OLE1{'ResultsFields.ResultMessage'}
-                TransactionTypeBuffer = ?OLE1{'ResultsFields.TransactionType'}
-                AmountProcessedBuffer = ?OLE1{'ResultsFields.AmountProcessed'}
-                DISPLAY(?RESULTSTATUS)
-                DISPLAY(?TransactionType)
-                DISPLAY(?AmountProcessed)
-                !MESSAGE(ResponseBuffer)
+               
+                ParseTransactionResponse
 
                 
             OF 'Setup'
@@ -240,6 +266,38 @@ ParseCommand         PROCEDURE(STRING eiCommand)
                 
                 
             END
+            
+ParseTransactionResponse    PROCEDURE
+    CODE
+        ResultStatusBuffer = ?OLE1{'ResultsFields.ResultMessage'}
+        TransactionTypeBuffer = ?OLE1{'ResultsFields.TransactionType'}        
+        AmountProcessedBuffer = ?OLE1{'ResultsFields.AmountProcessed'}
+        AmountBalanceBuffer = ?OLE1{'ResultsFields.AmountBalance'}             
+        CvvResponseTextBuffer       = ?OLE1{'ResultsFields.CvvResponseText'}           
+        CvvResponseCodeBuffer       = ?OLE1{'ResultsFields.CvvResponseCode'}        
+        AvsResponseTextBuffer      = ?OLE1{'ResultsFields.AvsResponseText'}
+        AvsResponseCodeBuffer       = ?OLE1{'ResultsFields.AvsResponseCode'}        
+        AccountCardTypeBuffer        = ?OLE1{'ResultsFields.AccountCardType'}
+        AccountExpiryDateBuffer      = ?OLE1{'ResultsFields.AccountExpiryDate'}        
+        AccountEntryMethodBuffer     = ?OLE1{'ResultsFields.AccountEntryMethod'}        
+        MaskedAccountBuffer  = ?OLE1{'ResultsFields.MaskedAccount'}        
+        UniqueTransIdBuffer  = ?OLE1{'ResultsFields.UniqueTransId'}
+        
+        !Display the buffers
+        DISPLAY(?RESULTSTATUS)        
+        DISPLAY(?TransactionType)        
+        DISPLAY(?AmountProcessed)
+        DISPLAY(?AmountBalance)
+        DISPLAY(?CvvResponseText)
+        DISPLAY(?CvvResponseCode)
+        DISPLAY(?AvsResponseText)
+        DISPLAY(?AvsResponseCode)
+        DISPLAY(?AccountCardType)
+        DISPLAY(?AccountExpiryDate)
+        DISPLAY(?AccountEntryMethod)
+        DISPLAY(?MaskedAccount)
+        DISPLAY(?UniqueTransId)
+        
         
 SaveSetupString     FUNCTION(STRING fileLocation, string newSetupString)
     CODE
