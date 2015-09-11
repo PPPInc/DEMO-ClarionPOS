@@ -1,0 +1,82 @@
+  401088      417 Code                CLARIONPOS_TEXT
+  4014A0       23 Code                IEXE32_TEXT
+  4014C4       6C Code                INIT_TEXT
+  402000       51 Initialized Data    CLARIONPOS_CONST
+  402054       6C Initialized Data    CLARIONPOS_DATA
+  4020C0       44 Initialized Data    IEXE32_DATA
+  402104        0 Initialized Data    __CPPINI_CONS
+  402104       1C Initialized Data    __CPPINI_CONST
+  402120        4 Initialized Data    __CPPINI_END
+  402124        0 Initialized Data    __INIVMT_CONS
+  402124        0 Initialized Data    __INIVMT_CONST_END
+  402130     FA00 Un-initialized Data $SETUPSTRINGBUFFER_BSS
+  411B30     FA00 Un-initialized Data $SETUPSTRING_BSS
+  421530      308 Un-initialized Data CLARIONPOS_BSS
+  421838     FA00 Un-initialized Data DESTFILE$RECORD_BSS
+  432000        8 __T_L_S__DAT
+  432008        0 __T_L_S__DATA_END
+  432010        0 __T_L_S__BS
+  432010        0 __T_L_S__BSS_END
+
+  401088 _main
+  401154 SAVESETUPSTRING@Fsbsb
+  40120C GETSETUPSTRING@Fsb
+  401304 PARSECOMMAND@Fsb
+  402054 DESTFILE$TYPE$RECORD
+  40206C $DESTFILE
+  402130 $SETUPSTRINGBUFFER
+  411B30 $SETUPSTRING
+  421530 $DESTNAME
+  421634 $SELECTEDCOMMAND
+  421834 $MYWINDOW
+  421838 MEMOS$DESTFILE
+  433000 __import_section_start
+  4334FC __import_section_end
+
+Imports
+ClaASC.dll:ASCII 433058
+ClaOLE.dll:Cla$HookOle 433068
+ClaRUN.dll:Cla$clearstr 433114
+ClaRUN.dll:Cla$code 433118
+ClaRUN.dll:Cla$comparestr 43311C
+ClaRUN.dll:Cla$DISPLAY 433120,401000
+ClaRUN.dll:Cla$EndEventLoop 433124
+ClaRUN.dll:Cla$ERRORCODE 433128,401008
+ClaRUN.dll:Cla$EVENT 43312C,401010
+ClaRUN.dll:Cla$FIELD 433130,401018
+ClaRUN.dll:Cla$FILE_ADDf 433134
+ClaRUN.dll:Cla$FILE_CLOSE 433138,401020
+ClaRUN.dll:Cla$FILE_CREATE 43313C
+ClaRUN.dll:Cla$FILE_DELETE 433140,401028
+ClaRUN.dll:CLA$FILE_DESTROY 433144
+ClaRUN.dll:Cla$FILE_NEXT 433148,401030
+ClaRUN.dll:Cla$FILE_OPEN 43314C,401038
+ClaRUN.dll:Cla$FILE_SETf 433150,401040
+ClaRUN.dll:Cla$freestr 433154
+ClaRUN.dll:Cla$freewindow 433158
+ClaRUN.dll:Cla$GetPropS 43315C
+ClaRUN.dll:Cla$init 433160
+ClaRUN.dll:Cla$MessageBox 433164,401048
+ClaRUN.dll:Cla$OPENwindow 433168,401050
+ClaRUN.dll:Cla$PopCString 43316C
+ClaRUN.dll:Cla$PopTemp 433170
+ClaRUN.dll:Cla$POST 433174,401058
+ClaRUN.dll:Cla$PushCString 433178
+ClaRUN.dll:Cla$PushString 43317C
+ClaRUN.dll:Cla$pwopen 433180,401060
+ClaRUN.dll:Cla$StackCLIP 433184,401068
+ClaRUN.dll:Cla$StackConcat 433188
+ClaRUN.dll:Cla$StackConcatR 43318C
+ClaRUN.dll:Cla$StackHeap 433190
+ClaRUN.dll:Cla$STACKpop 433194
+ClaRUN.dll:Cla$StartEventLoop 433198
+ClaRUN.dll:Cla$storestr 43319C
+ClaRUN.dll:_exit 4331A0,401070
+ClaRUN.dll:_free 4331A4
+ClaRUN.dll:_malloc 4331A8
+ClaRUN.dll:__sysinit 4331AC,401078
+ClaRUN.dll:__sysstart 4331B0,401080
+
+
+
+Entry Point:   4014A0
