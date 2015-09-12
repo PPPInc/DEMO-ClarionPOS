@@ -15,6 +15,7 @@ ParseCommand            PROCEDURE(STRING eiCommand)
 GetSetupString          FUNCTION(STRING fileName), STRING
 SaveSetupString         FUNCTION(STRING fileName, string newSetupString)
 ParseTransactionResponse        PROCEDURE
+PopulateTransactionRequest        PROCEDURE
 
                     
 
@@ -36,10 +37,25 @@ SetupString         CSTRING(64000)
 SetupStringBuffer   CSTRING(64000)
 ResponseBuffer      CSTRING(64000)
 
-ResultStatusBuffer      CSTRING(64000)
 
+!Trans Fields
 AmountTotalBuffer   CSTRING(150)
+CashierBuffer       CSTRING(150)
+UniqueTransRefBuffer        CSTRING(150)
+AmountTipBuffer     CSTRING(150)
+AmountFeeBuffer     CSTRING(150)
+CashBackBuffer      CSTRING(150)
+AchFormatBuffer     CSTRING(150)
+SMIDBuffer          CSTRING(150)
+TransactionRefBuffer        CSTRING(150)
+ApprovalNumberBuffer        CSTRING(150)
+Level2TaxBuffer     CSTRING(150)
+Level2OrderNumberBuffer     CSTRING(150)
+Level2CustomerCodeBuffer    CSTRING(150)
+BillingZipBuffer    CSTRING(150)
+BillingStreetAddressBuffer CSTRING(150)
 
+!Result Fields
 TransactionTypeBuffer       CSTRING(150)
 AmountProcessedBuffer       CSTRING(150)
 AmountBalanceBuffer CSTRING(150)
@@ -47,12 +63,12 @@ CvvResponseTextBuffer       CSTRING(150)
 CvvResponseCodeBuffer       CSTRING(150)
 AvsResponseTextBuffer       CSTRING(150)
 AvsResponseCodeBuffer       CSTRING(150)
-
 AccountCardTypeBuffer       CSTRING(150)
 AccountExpiryDateBuffer     CSTRING(150)
 AccountEntryMethodBuffer    CSTRING(150)
 MaskedAccountBuffer CSTRING(150)
 UniqueTransIdBuffer CSTRING(150)
+ResultStatusBuffer      CSTRING(64000)
 
 
 
@@ -78,58 +94,61 @@ Line        STRING(LineSize)
 
 
 
-MyWindow            WINDOW('Clarion POS'),AT(,,609,330),CENTER,GRAY,AUTO,SYSTEM, |
+MyWindow            WINDOW('Clarion POS'),AT(,,570,299),CENTER,GRAY,AUTO,SYSTEM, |
                         FONT('Microsoft Sans Serif',10,,FONT:regular)
                         OLE,AT(3,2,24,7),USE(?OLE1),HIDE,COMPATIBILITY(021H),CREATE('cipwin32.Ea' & |
                             'syIntegrator')
                         END
-                        SHEET,AT(21,86,532,217),USE(?SHEET1)
+                        SHEET,AT(21,50,532,217),USE(?SHEET1)
                             TAB('Trans Fields'),USE(?TAB1)
-                                TEXT,AT(140,144,93,12),USE(AmountTotalBuffer,, ?AMOUNTTOTAL)
-                                STRING('AmountTotal'),AT(52,144,,14),USE(?STRING1),FONT('Microso' & |
+                                TEXT,AT(140,108,93,12),USE(AmountTotalBuffer,, ?AMOUNTTOTAL)
+                                STRING('AmountTotal'),AT(52,108,,14),USE(?STRING1),FONT('Microso' & |
                                     'ft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('Cashier'),AT(52,162,61,14),USE(?STRING1:2),FONT('Microso' & |
+                                STRING('Cashier'),AT(52,126,61,14),USE(?STRING1:2),FONT('Microso' & |
                                     'ft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(140,162,93,12),USE(?CASHIER)
-                                TEXT,AT(140,178,93,12),USE(?UNIQUETRANSREF)
-                                STRING('UniqueTransRef'),AT(52,178,83,14),USE(?STRING1:3), |
+                                TEXT,AT(140,126,93,12),USE(CashierBuffer,, ?CASHIER)
+                                TEXT,AT(140,142,93,12),USE(UniqueTransRefBuffer,, ?UNIQUETRANSREF)
+                                STRING('UniqueTransRef'),AT(52,142,83,14),USE(?STRING1:3), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('AmountTip'),AT(52,196,83,14),USE(?STRING1:4), |
+                                STRING('AmountTip'),AT(52,160,83,14),USE(?STRING1:4), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(140,196,93,12),USE(?AMOUNTTIP)
-                                TEXT,AT(140,214,93,12),USE(?AMOUNTFEE)
-                                STRING('AmountFee'),AT(52,214,83,14),USE(?STRING1:5), |
+                                TEXT,AT(140,160,93,12),USE(AmountTipBuffer,, ?AMOUNTTIP)
+                                TEXT,AT(140,178,93,12),USE(AmountFeeBuffer,, ?AMOUNTFEE)
+                                STRING('AmountFee'),AT(52,178,83,14),USE(?STRING1:5), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('CashBack'),AT(52,230,83,14),USE(?STRING1:6),FONT('Micros' & |
+                                STRING('CashBack'),AT(52,194,83,14),USE(?STRING1:6),FONT('Micros' & |
                                     'oft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(140,230,93,12),USE(?CASHBACK)
-                                TEXT,AT(140,248,93,12),USE(?ACHFORMAT)
-                                STRING('ACHFormat'),AT(52,248,83,14),USE(?STRING1:7), |
+                                TEXT,AT(140,194,93,12),USE(CashBackBuffer,, ?CASHBACK)
+                                TEXT,AT(140,212,93,12),USE(AchFormatBuffer,, ?ACHFORMAT)
+                                STRING('ACHFormat'),AT(52,212,83,14),USE(?STRING1:7), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('SMID'),AT(52,266,83,14),USE(?STRING1:8),FONT('Microsoft ' & |
+                                STRING('SMID'),AT(52,230,83,14),USE(?STRING1:8),FONT('Microsoft ' & |
                                     'Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(140,266,93,12),USE(?SMID)
-                                STRING('TransactionReference'),AT(306,248,105,14),USE(?STRING1:9), |
+                                TEXT,AT(140,230,93,12),USE(SMIDBuffer,, ?SMID)
+                                STRING('TransactionReference'),AT(306,212,105,14),USE(?STRING1:9), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(428,248,93,12),USE(?TRANSACTIONREF)
-                                TEXT,AT(428,230,93,12),USE(?APPROVALNUMBER)
-                                STRING('Approval Number'),AT(306,230,83,14),USE(?STRING1:10), |
+                                TEXT,AT(428,212,93,12),USE(TransactionRefBuffer,, ?TRANSACTIONREF)
+                                TEXT,AT(428,194,93,12),USE(ApprovalNumberBuffer,, ?APPROVALNUMBER)
+                                STRING('Approval Number'),AT(306,194,83,14),USE(?STRING1:10), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('Level2Tax'),AT(306,214,83,14),USE(?STRING1:11), |
+                                STRING('Level2Tax'),AT(306,178,83,14),USE(?STRING1:11), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(428,214,93,12),USE(?LEVEL2TAX)
-                                TEXT,AT(428,196,93,12),USE(?LEVEL2ORDERNUMBER)
-                                STRING('Level2OrderNumber'),AT(306,196,105,14),USE(?STRING1:12), |
+                                TEXT,AT(428,178,93,12),USE(Level2TaxBuffer,, ?LEVEL2TAX)
+                                TEXT,AT(428,160,93,12),USE(Level2OrderNumberBuffer,, |
+                                    ?LEVEL2ORDERNUMBER)
+                                STRING('Level2OrderNumber'),AT(306,160,105,14),USE(?STRING1:12), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('Level2CustomerCode'),AT(306,178,105,14),USE(?STRING1:13), |
+                                STRING('Level2CustomerCode'),AT(306,142,105,14),USE(?STRING1:13), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(428,178,93,12),USE(?LEVEL2CUSTOMERCODE)
-                                TEXT,AT(428,162,93,12),USE(?BILLINGZIP)
-                                STRING('BillingZip'),AT(306,162,61,14),USE(?STRING1:14), |
+                                TEXT,AT(428,142,93,12),USE(Level2CustomerCodeBuffer,, |
+                                    ?LEVEL2CUSTOMERCODE)
+                                TEXT,AT(428,126,93,12),USE(BillingZipBuffer,, ?BILLINGZIP)
+                                STRING('BillingZip'),AT(306,126,61,14),USE(?STRING1:14), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                STRING('BillingStreetAddress'),AT(306,144,105,14),USE(?STRING1:15), |
+                                STRING('BillingStreetAddress'),AT(306,108,105,14),USE(?STRING1:15), |
                                     FONT('Microsoft Sans Serif',12),COLOR(COLOR:White)
-                                TEXT,AT(428,144,93,12),USE(?BILLINGSTREETADDRESS)
+                                TEXT,AT(428,108,93,12),USE(BillingStreetAddressBuffer,, |
+                                    ?BILLINGSTREETADDRESS)
                             END
                             TAB('Result Fields'),USE(?TAB2)
                                 TEXT,AT(132,250,93,12),USE(AmountBalanceBuffer,, ?AmountBalance)
@@ -184,16 +203,16 @@ MyWindow            WINDOW('Clarion POS'),AT(,,609,330),CENTER,GRAY,AUTO,SYSTEM,
                                 TEXT,AT(362,252,93,12),USE(AmountBalanceBuffer,, ?AmountBalance:2)
                             END
                             TAB('Setup String'),USE(?TAB3)
-                                TEXT,AT(35,115,497,175),USE(SetupStringBuffer,, ?TEXT1),SCROLL,VSCROLL, |
+                                TEXT,AT(35,79,497,175),USE(SetupStringBuffer,, ?TEXT1),SCROLL,VSCROLL, |
                                     FONT('Consolas',8),READONLY
                             END
                         END
-                        GROUP,AT(21,12,530,63),USE(?GROUP1),BOXED
-                            COMBO(@s20),AT(483,25,63),USE(selectedCommand,, ?COMBO1),LEFT,DROP(3), |
-                                FROM('CreditSale|VOID|Setup')
-                            BUTTON('&Process'),AT(505,57,43,14),USE(?OkButton),DEFAULT,LEFT
+                        GROUP,AT(21,12,530,26),USE(?GROUP1),BOXED
+                            COMBO(@s20),AT(419,20,77),USE(selectedCommand,, ?COMBO1),LEFT,DROP(5), |
+                                FROM('CreditSale|CreditSaveCard|CreditReturn|CreditVoid|Setup')
+                            BUTTON('&Process'),AT(500,19,43,14),USE(?OkButton),DEFAULT,LEFT
                         END
-                        BUTTON('&Close'),AT(569,314,36,14),USE(?CancelButton),LEFT
+                        BUTTON('&Close'),AT(517,278,36,14),USE(?CancelButton),LEFT
                     END
 
     CODE
@@ -234,13 +253,21 @@ ParseCommand         PROCEDURE(STRING eiCommand)
   CODE
         !MESSAGE(eiCommand)
         ?OLE1{'LoadSetup('& SetupString &')'}
-         CASE eiCommand
-            OF 'VOID'
+        CASE eiCommand
+            OF 'CreditReturn'
+            
+                MESSAGE(eiCommand)
+            OF 'CreditSaveCard'
+            
+                MESSAGE(eiCommand)
+            
+            OF 'CreditVoid'
                 MESSAGE(eiCommand)
             OF 'CreditSale'
                 !MESSAGE(eiCommand)
                 
-                ?OLE1{'TransFields.AmountTotal'} = AmountTotalBuffer
+                !?OLE1{'TransFields.AmountTotal'} = AmountTotalBuffer
+                PopulateTransactionRequest
                 x# = ?OLE1{'CreditSale()'}
                
                 ParseTransactionResponse
@@ -283,7 +310,7 @@ ParseTransactionResponse    PROCEDURE
         MaskedAccountBuffer  = ?OLE1{'ResultsFields.MaskedAccount'}        
         UniqueTransIdBuffer  = ?OLE1{'ResultsFields.UniqueTransId'}
         
-        !Display the buffers
+        !Display the buffer
         DISPLAY(?RESULTSTATUS)        
         DISPLAY(?TransactionType)        
         DISPLAY(?AmountProcessed)
@@ -297,6 +324,39 @@ ParseTransactionResponse    PROCEDURE
         DISPLAY(?AccountEntryMethod)
         DISPLAY(?MaskedAccount)
         DISPLAY(?UniqueTransId)
+        
+        
+PopulateTransactionRequest  PROCEDURE
+    CODE
+        ?OLE1{'TransFields.AmountTotal'} = AmountTotalBuffer   
+        ?OLE1{'TransFields.Cashier'} = CashierBuffer     
+        
+        ?OLE1{'TransFields.UniqueTransRef'} = UniqueTransRefBuffer  
+        
+        ?OLE1{'TransFields.AmountTip'} = AmountTipBuffer   
+        
+        ?OLE1{'TransFields.AMountFee'} = AmountFeeBuffer    
+        
+        ?OLE1{'TransFields.CashBack'} = CashBackBuffer      
+        
+        ?OLE1{'TransFields.ACHFormat'} = AchFormatBuffer     
+        
+        ?OLE1{'TransFields.SMID'} = SMIDBuffer        
+        
+        ?OLE1{'TransFields.TransactionReference'} = TransactionRefBuffer       
+        
+        ?OLE1{'TransFields.ApprovalNumber'} = ApprovalNumberBuffer       
+        
+        ?OLE1{'TransFields.Level2Tax'} = Level2TaxBuffer     
+        
+        ?OLE1{'TransFields.Level2OrderNumber'} = Level2OrderNumberBuffer     
+        
+        ?OLE1{'TransFields.Level2CustomerCode'} = Level2CustomerCodeBuffer    
+        
+        ?OLE1{'TransFields.BillingZip'} = BillingZipBuffer    
+        
+        ?OLE1{'TransFields.BillingStreetAddress'} = BillingStreetAddressBuffer 
+        
         
         
 SaveSetupString     FUNCTION(STRING fileLocation, string newSetupString)
